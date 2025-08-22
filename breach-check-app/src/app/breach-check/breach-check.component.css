@@ -1,0 +1,41 @@
+.container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+}
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.history-card {
+  margin-top: 15px;
+  background: #fafafa;
+  padding: 10px;
+}
+.history-card mat-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.history-card mat-list-item:hover {
+  background: #eeeeee;
+}
+.loading {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+.breach-card {
+  margin-top: 15px;
+}
+.safe-card {
+  margin-top: 15px;
+  border-left: 6px solid #4caf50; /* Green highlight */
+  background-color: #f1fdf1;
+}
+.warning-card {
+  margin-top: 15px;
+  border-left: 6px solid #f44336; /* Red highlight */
+  background-color: #fdecea;
+}

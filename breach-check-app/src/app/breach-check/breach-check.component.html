@@ -1,0 +1,91 @@
+<mat-card class="container">
+  <h2>Email Breach Checker</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" style="width: 70%;">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+      Check
+    </button>
+  </form>
+
+    <!-- 🔹 Search history -->
+<mat-card *ngIf="history.length > 0" class="history-card">
+  <mat-card-title>
+    Recent Checks
+    <button mat-stroked-button color="warn" (click)="clearHistory()" style="float:right;">
+      🗑️ Clear
+    </button>
+  </mat-card-title>
+
+  <mat-list>
+    <mat-list-item *ngFor="let email of history" (click)="reCheck(email)" style="cursor:pointer;">
+      📧 {{ email }}
+    </mat-list-item>
+  </mat-list>
+</mat-card>
+  
+  <div *ngIf="loading" class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <mat-card *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </mat-card>
+
+<mat-card *ngIf="result">
+  <h3>📊 Breach Report</h3>
+
+  <div *ngIf="result?.ExposedBreaches?.breaches_details?.length > 0; else safe">
+    
+    <!-- 🔴 Red Warning Summary -->
+    <mat-card class="warning-card">
+      <mat-card-header>
+        <mat-card-title>⚠️ Data Breach Detected!</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Your email was found in 
+          <strong>{{ result.ExposedBreaches.breaches_details.length }}</strong> breaches.
+        </p>
+        <p>
+          Risk Level:
+          <mat-chip color="warn" selected>
+            {{ result.BreachMetrics?.risk[0]?.risk_label }}
+          </mat-chip>
+          (Score: {{ result.BreachMetrics?.risk[0]?.risk_score }})
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- 🔽 Detailed Breach Cards -->
+    <mat-card *ngFor="let breach of result.ExposedBreaches.breaches_details" class="breach-card">
+      <mat-card-header>
+        <img mat-card-avatar [src]="breach.logo" alt="logo" />
+        <mat-card-title>{{ breach.breach }} ({{ breach.xposed_date }})</mat-card-title>
+        <mat-card-subtitle>{{ breach.industry }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ breach.details }}</p>
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let item of breach.xposed_data.split(';')">{{ item }}</mat-chip>
+        </mat-chip-listbox>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ✅ Safe card -->
+  <ng-template #safe>
+    <mat-card class="safe-card">
+      <mat-card-header>
+        <mat-card-title>✅ No breaches found!</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Your email address appears safe 🎉</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+</mat-card>
